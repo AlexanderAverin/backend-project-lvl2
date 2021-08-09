@@ -1,0 +1,11 @@
+import { Command } from 'commander/esm.mjs';
+const programm = new Command();
+
+programm
+  .version('output the version number')
+  .description('Compares two configuration files and shows a difference.')
+
+  
+programm.parse(process.argv);
+
+export default programm;
