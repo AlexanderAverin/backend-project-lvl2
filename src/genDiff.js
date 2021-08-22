@@ -3,19 +3,22 @@ import _ from 'lodash';
 const getSymbolStat = (status) => {
   switch (status) {
     case 'unchanged':
-      return { first: ' ', second: ' ' };
+      return { firstStatus: ' ', secondStatus: ' ' };
     case 'deleted':
-      return { first: '-', second: '+' };
+      return { firstStatus: '-', secondStatus: '+' };
     case 'added':
-      return { first: '+', second: '-' };
-    default: return { first: ' ', second: '' };
+      return { firstStatus: '+', secondStatus: '-' };
+    default: return { firstStatus: ' ', secondStatus: '' };
   }
 };
 
 const getChildren = (tree) => tree.children;
 
 const getChild = (name, inFile1, inFile2, children, status) => {
-  return { name, inFile1, inFile2, children, status };
+  const child = {
+    name, inFile1, inFile2, children, status,
+  };
+  return child;
 };
 
 const getString = (status, name, value) => `${status} ${name}: ${value}`;
@@ -62,8 +65,9 @@ const generateTree = (obj1, obj2) => {
 
 const render = (tree) => _.sortBy(getChildren(tree), (child) => child.name)
   .reduce((acc, child) => {
-    const firstStatus = getSymbolStat(child.status).first;
-    const secondStatus = getSymbolStat(child.status).second;
+    // const firstStatus = getSymbolStat(child.status).first;
+    // const secondStatus = getSymbolStat(child.status).second;
+    const { firstStatus, secondStatus } = getSymbolStat(child.status);
     const { name, inFile1, inFile2 } = child;
 
     const str = getString(firstStatus, name, inFile1 ?? inFile2);
