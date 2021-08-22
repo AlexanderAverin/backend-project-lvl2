@@ -9,3 +9,6 @@ gendiff:
 
 test:
 	npm test
+
+test-coverage:
+	node --experimental-vm-modules "node_modules/.bin/jest" --coverage
