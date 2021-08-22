@@ -21,7 +21,7 @@ const getChild = (name, inFile1, inFile2, children, status) => {
   return child;
 };
 
-const getString = (status, name, value) => `${status} ${name}: ${value}`;
+const getString = (status, name, value) => `  ${status} ${name}: ${value}`;
 
 const mergeKeys = (obj1, obj2) => [...Object.keys(obj1), ...Object.keys(obj2)];
 
