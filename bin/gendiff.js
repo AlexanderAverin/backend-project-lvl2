@@ -11,7 +11,7 @@ const programm = new Command();
 
 const isJson = (filepath) => path.extname(filepath) === '.json';
 
-const isYaml = (filepath) => path.extname(filepath) === '.yaml';
+// const isYaml = (filepath) => path.extname(filepath) === '.yaml';
 
 programm
   .version('output the version number')

@@ -65,8 +65,6 @@ const generateTree = (obj1, obj2) => {
 
 const render = (tree) => _.sortBy(getChildren(tree), (child) => child.name)
   .reduce((acc, child) => {
-    // const firstStatus = getSymbolStat(child.status).first;
-    // const secondStatus = getSymbolStat(child.status).second;
     const { firstStatus, secondStatus } = getSymbolStat(child.status);
     const { name, inFile1, inFile2 } = child;
 
