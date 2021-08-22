@@ -33,5 +33,3 @@ programm
   });
 
 programm.parse(process.argv);
-
-export default programm;

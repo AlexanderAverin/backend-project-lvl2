@@ -14,23 +14,19 @@ const getSymbolStat = (status) => {
 
 const getChildren = (tree) => tree.children;
 
-const getChild = (name, inFile1, inFile2, status) => ({ name, inFile1, inFile2, status });
+const getChild = (name, inFile1, inFile2, children, status) => {
+  return { name, inFile1, inFile2, children, status };
+};
 
 const getString = (status, name, value) => `${status} ${name}: ${value}`;
 
 const mergeKeys = (obj1, obj2) => [...Object.keys(obj1), ...Object.keys(obj2)];
 
-const Unchanged = (key, obj1, obj2) => {
-  return _.has(obj1, key) && _.has(obj2, key) && obj1[key] === obj2[key] ? 'unchanged' : false;
-};
+const Unchanged = (key, obj1, obj2) => (_.has(obj1, key) && _.has(obj2, key) && obj1[key] === obj2[key] ? 'unchanged' : false);
 
-const Deleted = (key, obj1, obj2) => {
-  return _.has(obj1, key) && obj1[key] !== obj2[key] ? 'deleted' : false;
-};
+const Deleted = (key, obj1, obj2) => (_.has(obj1, key) && obj1[key] !== obj2[key] ? 'deleted' : false);
 
-const Added = (key, obj1, obj2) => {
-  return _.has(obj2, key) && obj1[key] !== obj2[key] ? 'added' : false;
-};
+const Added = (key, obj1, obj2) => (_.has(obj2, key) && obj1[key] !== obj2[key] ? 'added' : false);
 
 const getStatsMap = (key, obj1, obj2) => (func) => (func2) => (func3) => ({
   unchanged: func(key, obj1, obj2),
@@ -54,9 +50,11 @@ const generateTree = (obj1, obj2) => {
   const keys = mergeKeys(obj1, obj2);
   const tree = {};
 
-  const iter = (mergedKeys) => keys.reduce((acc, key) => {
-    const children = !_.isObject(obj1[key]) && !_.isObject(obj2[key]) ? [] : generateTree(obj1[key], obj2[key]);
-    return [...acc, { name: key, inFile1: obj1[key], inFile2: obj2[key], children, status: handler(key, obj1, obj2) }];
+  const iter = (mergedKeys) => mergedKeys.reduce((acc, key) => {
+    const children = !_.isObject(obj1[key]) && !_.isObject(obj2[key])
+      ? [] : generateTree(obj1[key], obj2[key]);
+
+    return [...acc, getChild(key, obj1[key], obj2[key], children, handler(key, obj1, obj2))];
   }, []);
   tree.children = iter(keys);
   return tree;
@@ -69,7 +67,9 @@ const render = (tree) => _.sortBy(getChildren(tree), (child) => child.name)
     const { name, inFile1, inFile2 } = child;
 
     const str = getString(firstStatus, name, inFile1 ?? inFile2);
-    const str2 = inFile1 && inFile2 && inFile1 !== inFile2 ? getString(secondStatus, name, inFile2) : [];
+    const str2 = inFile1 && inFile2 && inFile1 !== inFile2
+      ? getString(secondStatus, name, inFile2) : [];
+
     return !acc.includes(str) ? [...acc, str, str2] : [...acc];
   }, []).flat().join('\n');
 
