@@ -11,4 +11,4 @@ test:
 	npm test
 
 test-coverage:
-	node --experimental-vm-modules "node_modules/.bin/jest" --coverage
+	NODE_OPTIONS=--experimental-vm-modules npx jest --coverage

@@ -5,13 +5,14 @@ import { Command } from 'commander/esm.mjs';
 import * as fs from 'fs';
 import path from 'path';
 import { cwd } from 'process';
+import yaml from 'js-yaml';
 import genDiff from '../src/genDiff.js';
 
 const programm = new Command();
 
 const isJson = (filepath) => path.extname(filepath) === '.json';
 
-// const isYaml = (filepath) => path.extname(filepath) === '.yaml';
+const isYaml = (filepath) => path.extname(filepath) === '.yaml' || path.extname(filepath) === '.yml';
 
 programm
   .version('output the version number')
@@ -25,10 +26,17 @@ programm
 
     const pathToFile = path.resolve(DirectoryPath, filepath1);
     const pathToFile2 = path.resolve(DirectoryPath2, filepath2);
+
     if (isJson(pathToFile) && isJson(pathToFile)) {
-      const parsedFile = fs.readFileSync(pathToFile, 'utf8');
-      const parsedFile2 = fs.readFileSync(pathToFile2, 'utf8');
-      console.log(genDiff(JSON.parse(parsedFile), JSON.parse(parsedFile2)));
+      const parsedJson1 = JSON.parse(fs.readFileSync(pathToFile, 'utf8'));
+      const parsedJson2 = JSON.parse(fs.readFileSync(pathToFile2, 'utf8'));
+      console.log(genDiff(parsedJson1, parsedJson2));
+    }
+
+    if (isYaml(pathToFile) && isYaml(pathToFile2)) {
+      const parsedYaml1 = yaml.load(fs.readFileSync(pathToFile));
+      const parsedYaml2 = yaml.load(fs.readFileSync(pathToFile2));
+      console.log(genDiff(parsedYaml1, parsedYaml2));
     }
   });
 
