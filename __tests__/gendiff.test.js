@@ -11,25 +11,42 @@ const __dirname = dirname(__filename);
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
 
-let JsonData1;
-let JsonData2;
+let flatJsonData1;
+let flatJsonData2;
 
-let YamlData1;
-let YamlData2;
+let nestJsonData1;
+let nestJsonData2;
 
-let result;
+let flatYamlData1;
+let flatYamlData2;
+
+let nestYamlData1;
+let nestYamlData2;
+
+let resultForFlatFiles;
+let resultForNestedFiles;
 
 beforeEach(() => {
-  JsonData1 = JSON.parse(readFile('file1.json'));
-  JsonData2 = JSON.parse(readFile('file2.json'));
+  flatJsonData1 = JSON.parse(readFile('flatFiles/file1.json'));
+  flatJsonData2 = JSON.parse(readFile('flatFiles/file2.json'));
 
-  YamlData1 = yaml.load(readFile('file1.yaml'));
-  YamlData2 = yaml.load(readFile('file2.yaml'));
+  nestJsonData1 = JSON.parse(readFile('nestedFiles/file1.json'));
+  nestJsonData2 = JSON.parse(readFile('nestedFiles/file2.json'));
 
-  result = readFile('result.txt');
+  flatYamlData1 = yaml.load(readFile('flatFiles/file1.yaml'));
+  flatYamlData2 = yaml.load(readFile('flatFiles/file2.yaml'));
+
+  nestYamlData1 = yaml.load(readFile('nestedFiles/file1.yaml'));
+  nestYamlData2 = yaml.load(readFile('nestedFiles/file2.yaml'));
+
+  resultForNestedFiles = readFile('nestedFiles/result.txt');
+  resultForFlatFiles = readFile('flatFiles/result.txt');
 });
 
 test('gendiff test', () => {
-  expect(genDiff(JsonData1, JsonData2)).toEqual(result);
-  expect(genDiff(YamlData1, YamlData2)).toEqual(result);
+  expect(genDiff(flatJsonData1, flatJsonData2)).toEqual(resultForFlatFiles);
+  expect(genDiff(flatYamlData1, flatYamlData2)).toEqual(resultForFlatFiles);
+
+  expect(genDiff(nestJsonData1, nestJsonData2)).toEqual(resultForNestedFiles);
+  expect(genDiff(nestYamlData1, nestYamlData2)).toEqual(resultForNestedFiles);
 });
