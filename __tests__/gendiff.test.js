@@ -28,6 +28,8 @@ let resultForStylishNestedFiles;
 
 let resultForPlainNestedFiles;
 
+let resultForJsonNestedFiles;
+
 beforeEach(() => {
   flatJsonData1 = JSON.parse(readFile('flatFiles/file1.json'));
   flatJsonData2 = JSON.parse(readFile('flatFiles/file2.json'));
@@ -45,6 +47,8 @@ beforeEach(() => {
   resultForStylishFlatFiles = readFile('flatFiles/resultForStylishFormat.txt');
 
   resultForPlainNestedFiles = readFile('nestedFiles/resultForPlaneFormat.txt');
+
+  resultForJsonNestedFiles = readFile('nestedFiles/resultForJsonFormat.txt');
 });
 
 test('gendiff test', () => {
@@ -55,4 +59,6 @@ test('gendiff test', () => {
   expect(genDiff(nestYamlData1, nestYamlData2)).toEqual(resultForStylishNestedFiles);
 
   expect(genDiff(nestJsonData1, nestJsonData2, 'plain')).toEqual(resultForPlainNestedFiles);
+
+  expect(genDiff(nestJsonData1, nestJsonData2, 'json')).toEqual(resultForJsonNestedFiles);
 });
