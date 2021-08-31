@@ -1,14 +1,5 @@
 import generateAst from './parser.js';
-import stylishRender from './renders/visual.js';
-
-const getRender = (format) => {
-  switch (format) {
-    case 'stylish':
-      return stylishRender;
-    default:
-      return stylishRender;
-  }
-};
+import getRender from './formatters/index.js';
 
 const genDiff = (file1, file2, format = 'stylish') => {
   const Ast = generateAst(file1, file2);

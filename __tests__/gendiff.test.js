@@ -23,8 +23,10 @@ let flatYamlData2;
 let nestYamlData1;
 let nestYamlData2;
 
-let resultForFlatFiles;
-let resultForNestedFiles;
+let resultForStylishFlatFiles;
+let resultForStylishNestedFiles;
+
+let resultForPlainNestedFiles;
 
 beforeEach(() => {
   flatJsonData1 = JSON.parse(readFile('flatFiles/file1.json'));
@@ -39,14 +41,18 @@ beforeEach(() => {
   nestYamlData1 = yaml.load(readFile('nestedFiles/file1.yaml'));
   nestYamlData2 = yaml.load(readFile('nestedFiles/file2.yaml'));
 
-  resultForNestedFiles = readFile('nestedFiles/result.txt');
-  resultForFlatFiles = readFile('flatFiles/result.txt');
+  resultForStylishNestedFiles = readFile('nestedFiles/resultForStylishFormat.txt');
+  resultForStylishFlatFiles = readFile('flatFiles/resultForStylishFormat.txt');
+
+  resultForPlainNestedFiles = readFile('nestedFiles/resultForPlaneFormat.txt');
 });
 
 test('gendiff test', () => {
-  expect(genDiff(flatJsonData1, flatJsonData2)).toEqual(resultForFlatFiles);
-  expect(genDiff(flatYamlData1, flatYamlData2)).toEqual(resultForFlatFiles);
+  expect(genDiff(flatJsonData1, flatJsonData2)).toEqual(resultForStylishFlatFiles);
+  expect(genDiff(flatYamlData1, flatYamlData2)).toEqual(resultForStylishFlatFiles);
 
-  expect(genDiff(nestJsonData1, nestJsonData2)).toEqual(resultForNestedFiles);
-  expect(genDiff(nestYamlData1, nestYamlData2)).toEqual(resultForNestedFiles);
+  expect(genDiff(nestJsonData1, nestJsonData2)).toEqual(resultForStylishNestedFiles);
+  expect(genDiff(nestYamlData1, nestYamlData2)).toEqual(resultForStylishNestedFiles);
+
+  expect(genDiff(nestJsonData1, nestJsonData2, 'plain')).toEqual(resultForPlainNestedFiles);
 });

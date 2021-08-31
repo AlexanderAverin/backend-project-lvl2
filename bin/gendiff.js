@@ -8,7 +8,7 @@ import { cwd } from 'process';
 import yaml from 'js-yaml';
 import genDiff from '../src/genDiff.js';
 
-const programm = new Command();
+const program = new Command();
 
 const isJson = (filepath) => path.extname(filepath) === '.json';
 
@@ -23,7 +23,7 @@ const convertToObject = (file) => {
   return JSON.parse(fs.readFileSync(file));
 };
 
-programm
+program
   .version('output the version number')
   .description('Compares two configuration files and shows a difference.')
   .option('-f, --format [type]', 'output format', 'stylish')
@@ -36,7 +36,9 @@ programm
     const fileObject = convertToObject(pathToFile);
     const fileObject2 = convertToObject(pathToFile2);
 
-    console.log(genDiff(fileObject, fileObject2, 'format'));
+    const options = program.opts();
+
+    console.log(genDiff(fileObject, fileObject2, options.format));
   });
 
-programm.parse(process.argv);
+program.parse(process.argv);

@@ -7,7 +7,7 @@ const hasChildren = (node) => {
   return children.length !== 0;
 };
 
-const genDiffForChild = (node) => _.isObject(node.inFile1) && _.isObject(node.inFile2);
+const needGenDiffForChild = (node) => _.isObject(node.inFile1) && _.isObject(node.inFile2);
 
 const addBrackets = (str, tab = '') => `{\n${str}\n${tab}}`;
 
@@ -40,43 +40,33 @@ const renderNode = (node, tab) => {
 const render = (tree, RenderFunction = renderNode, tab = '') => addBrackets(_.sortBy(tree, (node) => node.name)
   .flatMap((node) => {
     const children = getChildren(node);
-    const newTab = `${tab}  `;
+    const space = '  ';
+    const newTab = `${tab}${space}`;
+    const tabForNode = `${newTab}${space}`;
 
     if (node.type === 'nested') {
       if (_.isObject(node.inFile1)) {
         return [
-          renderNestedNodeWithType(node, render(children, clearRenderNode, `${newTab}  `), newTab, '-'),
+          renderNestedNodeWithType(node, render(children, clearRenderNode, tabForNode), newTab, '-'),
           `${newTab}+ ${node.name}: ${node.inFile2}`,
         ];
       }
       return [
         `${newTab}- ${node.name}: ${node.inFile1}`,
-        renderNestedNodeWithType(node, render(children, clearRenderNode, `${newTab}  `), newTab, '+'),
+        renderNestedNodeWithType(node, render(children, clearRenderNode, tabForNode), newTab, '+'),
       ];
     }
 
-    if (hasChildren(node) && genDiffForChild(node)) {
-      return renderNestedNodeWithType(
-        node,
-        render(children, renderNode, `${newTab}  `),
-        newTab,
-      );
+    if (hasChildren(node) && needGenDiffForChild(node)) {
+      return renderNestedNodeWithType(node, render(children, renderNode, tabForNode), newTab);
     }
 
-    if (hasChildren(node) && !genDiffForChild(node) && RenderFunction === renderNode) {
-      return renderNestedNodeWithType(
-        node,
-        render(children, clearRenderNode, `${newTab}  `),
-        newTab,
-      );
+    if (hasChildren(node) && !needGenDiffForChild(node) && RenderFunction === renderNode) {
+      return renderNestedNodeWithType(node, render(children, clearRenderNode, tabForNode), newTab);
     }
 
-    if (hasChildren(node) && !genDiffForChild(node)) {
-      return renderNestedNode(
-        node,
-        render(children, clearRenderNode, `${newTab}  `),
-        newTab,
-      );
+    if (hasChildren(node) && !needGenDiffForChild(node)) {
+      return renderNestedNode(node, render(children, clearRenderNode, tabForNode), newTab);
     }
 
     return RenderFunction(node, tab);
