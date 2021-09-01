@@ -29,10 +29,10 @@ const clearRenderNode = (node, tab) => `${tab}    ${node.name}: ${node.inFile1 ?
 const renderNode = (node, tab) => {
   const select = {
     unchanged: () => (`${tab}    ${node.name}: ${node.inFile1}`),
-    deleted: () => (`${tab}  - ${node.name}: ${node.inFile1}`),
-    changed: () => ([`${tab}  - ${node.name}: ${node.inFile1}`,
-      `${tab}  + ${node.name}: ${node.inFile2}`]),
-    added: () => (`${tab}  + ${node.name}: ${node.inFile2}`),
+    deleted: () => (node.inFile1 !== '' ? `${tab}  - ${node.name}: ${node.inFile1}` : `${tab}  - ${node.name}:`),
+    changed: () => ([node.inFile1 !== '' ? `${tab}  - ${node.name}: ${node.inFile1}` : `${tab}  - ${node.name}:`,
+      node.inFile2 !== '' ? `${tab}  + ${node.name}: ${node.inFile2}` : `${tab}  + ${node.name}:`]),
+    added: () => (node.inFile2 !== '' ? `${tab}  + ${node.name}: ${node.inFile2}` : `${tab}  + ${node.name}:`),
   };
   return select[node.type]();
 };
